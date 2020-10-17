@@ -1,0 +1,11 @@
+{
+    "atlasMongo": {
+        "username": "user",
+        "pwd": "user"
+    },
+    "facebookApi": {
+        "FACEBOOK_APP_ID": "appid",
+        "FACEBOOK_APP_SECRET": "secret"
+    }
+}
+
