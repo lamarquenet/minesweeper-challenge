@@ -1,3 +1,11 @@
-<h1 class="mt-4">Dashboard</h1>
-<p class="lead mb-3">Welcome <%= name %></p>
-<a href="/users/logout" class="btn btn-secondary">Logout</a>
+<%- include('./partials/logout.ejs') %>
+<div class="row row-equal-height">
+
+    <div class="col-xl-8" id="left">
+        <%- include('./partials/newgameform.ejs') %>
+    </div>
+    <div class="col-xl-4" id="right">
+        <%- include('./partials/newgameform.ejs') %>
+    </div>
+</div>
+

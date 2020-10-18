@@ -2,7 +2,7 @@ var configValues = require("./config");
 
 module.exports =  {
     atlasMongo: {
-        connectionString: process.env.ATLAS_MONGODB_CONNECTION_URI? process.env.ATLAS_MONGODB_CONNECTION_RUI: configValues.atlasMongo.connectionString
+        connectionString: process.env.ATLAS_MONGODB_CONNECTION_URI? process.env.ATLAS_MONGODB_CONNECTION_URI: configValues.atlasMongo.connectionString
     },
     localMongo: {
         TestDbConnectionString: process.env.MONGO_TEST_CONNECTIONSTRING? process.env.MONGO_TEST_CONNECTIONSTRING: configValues.localMongo.TestDbConnectionString
