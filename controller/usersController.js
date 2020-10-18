@@ -14,7 +14,7 @@ const loginFacebook = (req, res, next)=>{
 //what to do after facebook make a call back to us telling if it was or not succesfull the login using facebook
 const loginFacebookCb = (req, res, next) =>{
     passport.authenticate('facebook', {
-        successRedirect: '/dashboard',
+        successRedirect: '/game/list',
         failureRedirect: '/users/login',
         failureFlash: true
     })(req, res, next);
@@ -38,7 +38,7 @@ const loginLocal = (req, res, next) =>{
     }
     else{
         passport.authenticate('local', {
-            successRedirect: '/dashboard',
+            successRedirect: '/game/list',
             failureRedirect: '/users/login',
             failureFlash: true
         })(req, res, next);

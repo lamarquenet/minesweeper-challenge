@@ -18,6 +18,7 @@ module.exports =  {
         FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET?process.env.FACEBOOK_APP_SECRET: configValues.facebookApi.FACEBOOK_APP_SECRET
     },
     server:{
-        port: process.env.PORT?process.env.PORT :5000
+        port: process.env.PORT? process.env.PORT : configValues.server.port,
+        url: process.env.URL? process.env.URL : configValues.server.url
     }
 }

@@ -3,6 +3,7 @@ var cors = require('cors')
 var whitelist = ['https://buscamina.herokuapp.com:443', 'http://buscamina.herokuapp.com:80', 'http://localhost:5000', 'https://localhost:5000']
 var corsOptions = {
     origin: function (origin, callback) {
+        console.log(origin);
         if (!origin || whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {

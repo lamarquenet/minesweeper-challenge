@@ -9,7 +9,7 @@ const ensureAuth = (req, res, next) =>{
 
 const ifAuthRedirectToDash = (req, res, next) =>{
     if(req.isAuthenticated()){
-        return res.redirect('/dashboard');
+        return res.redirect('/game/list');
     }
     else{
         return next();

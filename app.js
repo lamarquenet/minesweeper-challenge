@@ -60,7 +60,9 @@ app.use((req, res, next)=>{
 //routes
 const indexRoutes = require('./routes/index');
 const userRoutes = require('./routes/users');
+const gameRoutes = require('./routes/game')
 app.use('/',indexRoutes);
+app.use('/game', gameRoutes);
 app.use('/users',userRoutes);
 
 const PORT = config.server.port;

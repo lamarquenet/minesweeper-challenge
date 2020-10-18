@@ -3,7 +3,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const { loggers } = require('winston');
 const logger = loggers.get('general-logger');
 const bcrypt = require('bcryptjs');
-const configFb = require("./index").facebookApi;
+const config = require("./index");
 const userModel = require('../models/User');
 
 const setPassportStrategies = (passport) =>{
@@ -32,9 +32,9 @@ const setPassportStrategies = (passport) =>{
     )
 
     const facebookOptions ={
-        clientID: configFb.FACEBOOK_APP_ID ,
-        clientSecret: configFb.FACEBOOK_APP_SECRET,
-        callbackURL: 'http://localhost:5000/users/loginFacebook/callback',
+        clientID: config.facebookApi.FACEBOOK_APP_ID ,
+        clientSecret: config.facebookApi.FACEBOOK_APP_SECRET,
+        callbackURL: config.server.url+':'+config.server.port+'/users/loginFacebook/callback',
         profileFields: ['emails', 'name']
     }
 
