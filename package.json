@@ -1,0 +1,46 @@
+{
+  "name": "minesweeper-challenge",
+  "version": "1.0.0",
+  "description": "minesweeper for code challenge",
+  "main": "app.js",
+  "engines": {
+    "node": "12.18.3"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lamarquenet/minesweeper-challenge.git"
+  },
+  "author": "Nicolas Zuain",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lamarquenet/minesweeper-challenge/issues"
+  },
+  "homepage": "https://github.com/lamarquenet/minesweeper-challenge#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
+    "connect-redis": "^5.0.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
+    "express-session": "^1.17.1",
+    "joi": "^17.2.1",
+    "mongoose": "^5.10.9",
+    "morgan": "^1.10.0",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "passport-local": "^1.0.0",
+    "redis": "^3.0.2",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.0"
+  }
+}
