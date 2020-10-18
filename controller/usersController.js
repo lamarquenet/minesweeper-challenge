@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const { loggers } = require('winston');
 const logger = loggers.get('general-logger');
-const {registerValidation, loginValidation } = require('./validations');
+const {registerValidation, loginValidation } = require('../lib/validations');
 const userModel = require("../models/User")
 
 //Get handlers with middleware

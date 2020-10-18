@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const userServices = require('../services/usersServices');
+const userServices = require('../controller/usersController');
 const {ifAuthRedirectToDash} = require('../middlewares/auth');
 
 //Login Page
-router.get('/login',ifAuthRedirectToDash, (req , res) => res.render('login'));
+router.get('/login',ifAuthRedirectToDash, (req , res) => {res.render('login')});
 
 //Register Page
 router.get('/register',ifAuthRedirectToDash, (req , res) => res.render('register'));

@@ -5,6 +5,8 @@ const config = require('./config');
 
 app.use(bodyParses.json());
 
+app.use(express.static('public'));
+
 const corsMiddleware = require('./middlewares/cors');
 app.options('*', corsMiddleware);
 app.use(corsMiddleware);
@@ -60,8 +62,6 @@ const indexRoutes = require('./routes/index');
 const userRoutes = require('./routes/users');
 app.use('/',indexRoutes);
 app.use('/users',userRoutes);
-
-app.use(express.static('public'));
 
 const PORT = config.server.port;
 
