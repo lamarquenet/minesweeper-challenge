@@ -1,6 +1,6 @@
 var cors = require('cors')
 
-var whitelist = ['http://localhost:5000', 'https://localhost:5000']
+var whitelist = ['https://buscamina.herokuapp.com/']
 var corsOptions = {
     origin: function (origin, callback) {
         if (!origin || whitelist.indexOf(origin) !== -1) {
