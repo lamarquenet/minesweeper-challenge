@@ -1,11 +1,19 @@
 {
     "atlasMongo": {
-        "username": "user",
-        "pwd": "user"
+        "connectionString": "here goes your connection string to any mongo db you might want to use"
+    },
+    "localMongo": {
+        "TestDbConnectionString": "if you wish to have a separated db for your test, it goes here"
+    },
+    "redisHeroku": {
+        "port": "redis port",
+        "host": "redis address",
+        "password": "redis password",
+        "connectionString": "redis connection string"
     },
     "facebookApi": {
-        "FACEBOOK_APP_ID": "appid",
-        "FACEBOOK_APP_SECRET": "secret"
+        "FACEBOOK_APP_ID": "facebook api id",
+        "FACEBOOK_APP_SECRET": "facebook api secret"
     }
 }
 
