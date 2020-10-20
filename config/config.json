@@ -1,23 +1,21 @@
 {
     "atlasMongo": {
-        "connectionString": "here goes your connection string to any mongo db you might want to use"
+        "connectionString": "mongodb://localhost:27017/minesweeper"
     },
     "localMongo": {
-        "TestDbConnectionString": "if you wish to have a separated db for your test, it goes here"
+        "TestDbConnectionString": "mongodb://localhost:27017/minesweeper"
     },
-    "redisHeroku": {
-        "port": "redis port",
-        "host": "redis address",
-        "password": "redis password",
-        "connectionString": "redis connection string"
+    "redis": {
+        "connectionString": "redis://localhost:6379"
     },
     "facebookApi": {
-        "FACEBOOK_APP_ID": "facebook api id",
-        "FACEBOOK_APP_SECRET": "facebook api secret"
+        "FACEBOOK_APP_ID": "add facebookappID if you wish to use fb auth",
+        "FACEBOOK_APP_SECRET": "fb secret"
     },
     "server": {
         "port": 5000,
         "url": "http://localhost"
     }
 }
+
 
