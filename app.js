@@ -11,7 +11,7 @@ const corsMiddleware = require('./middlewares/cors');
 app.options('*', corsMiddleware);
 app.use(corsMiddleware);
 
-//no console logs in production as they are not needed and they create overhead to the server
+//no console logs in production as they are not needed and they create overhead to the server, use logger instead
 if (process.env.NODE_ENV === 'production') {
     console.log = function () { };
 }
@@ -67,4 +67,7 @@ app.use('/users',userRoutes);
 
 const PORT = config.server.port;
 
-app.listen(PORT, logger.info(`Server started on port ${PORT}`));
+app.listen(PORT, ()=> {
+    logger.info(config.server.port);
+    logger.info(`Server started on port ${PORT}`)
+});

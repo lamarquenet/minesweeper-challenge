@@ -7,11 +7,8 @@ module.exports =  {
     localMongo: {
         TestDbConnectionString: process.env.MONGO_TEST_CONNECTIONSTRING? process.env.MONGO_TEST_CONNECTIONSTRING: configValues.localMongo.TestDbConnectionString
     },
-    redisHeroku: {
-        port: process.env.REDISHEROKU_PORT? process.env.REDISHEROKU_PORT: configValues.redisHeroku.port,
-        host: process.env.REDISHEROKU_HOST? process.env.REDISHEROKU_HOST: configValues.redisHeroku.host,
-        password: process.env.REDISHEROKU_PASSWORD? process.env.REDISHEROKU_PASSWORD: configValues.redisHeroku.password,
-        connectionString: process.env.REDISHEROKU_CONNECTION_URI? process.env.REDISHEROKU_CONNECTION_URI: configValues.redisHeroku.connectionString
+    redis: {
+       connectionString: process.env.REDIS_URL? process.env.REDIS_URL: configValues.redis.connectionString
     },
     facebookApi: {
         FACEBOOK_APP_ID: process.env.FACEBOOK_API_ID?process.env.FACEBOOK_API_ID: configValues.facebookApi.FACEBOOK_APP_ID,

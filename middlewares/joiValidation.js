@@ -36,10 +36,9 @@ const validateGameIdReqBody = (req, res, next)=>{
 
 //game id validation schema
 const squareBodySchema = Joi.object({
-    gameId: Joi.string().length(24).required(),
-    row: Joi.number().integer().min(1).required(),
-    column: Joi.number().integer().min(1).required(),
-    action: Joi.string().valid('reveal','question_mark', 'red_flag').required()
+    posY: Joi.number().integer().min(1).required(),
+    posX: Joi.number().integer().min(1).required(),
+    action: Joi.string().valid('reveal','question_mark', 'red_flag', "clean").required()
 });
 
 const validateBoxUpdateParamsAndBody = (req, res, next)=>{

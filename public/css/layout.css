@@ -1,0 +1,130 @@
+
+/* reset */
+* {margin:0; padding:0;}
+ul, li {display:block; margin:0; padding:0; list-style:none;}
+
+
+/* layout */
+html {height:100%;}
+body {font-family:Arial, Helvetica, sans-serif; height:100%;}
+table {width:100%; height:50%;}
+table td {vertical-align:middle; text-align:center;}
+
+
+/* #minesweeper */
+#minesweeper {
+    width:444px;
+    margin:0 auto;
+    border:1px solid #999;
+    padding:30px 40px 40px 40px;
+    box-shadow:8px 8px #999;
+    overflow:hidden;
+}
+#minesweeper * {
+}
+#minesweeper .main {
+    margin:0 auto;
+    overflow:hidden;
+    border:1px solid #999;
+}
+#minesweeper li {
+    width:40px;
+    height:40px;
+    float:left;
+    border:1px solid #444;
+    background:url(../img/bg_down.png) 0 0 no-repeat;
+}
+#minesweeper li:hover {
+    border-color:#bb0000;
+}
+#minesweeper li img {
+    display:block;
+    width:40px;
+    height:40px;
+    cursor:pointer;
+    position:relative;
+}
+#minesweeper li:active img {
+    border:2px solid #bb0000;
+    width:36px; height:36px;
+}
+#minesweeper li.open {
+    border-color:#444;
+}
+#minesweeper li.open img {
+    cursor:default;
+    border:none;
+    width:40px;
+    height:40px;
+}
+#minesweeper li.open:active img {
+    border:none;
+    width:40px;
+    height:40px;
+}
+#minesweeper .header {
+    height:80px;
+    position:relative;
+    background:#eee;
+    border:1px solid #ccc;
+    overflow:hidden;
+}
+#minesweeper .header div {
+    position:absolute;
+    top:11px;
+    width:50px;
+}
+#minesweeper .header .time {
+    left:8px;
+}
+#minesweeper .header .secured {
+    right:70px;
+}
+#minesweeper .header .mines {
+    right:6px;
+}
+#minesweeper .header .mines img {
+    position:relative; top:3px;
+}
+#minesweeper .header div span {
+    position:relative;
+    top:0; display:block;
+    text-align:center;
+}
+#minesweeper .header p {
+    padding:10px 5px 4px 5px;
+    font-weight:bold;
+    font-size:1.5em;
+}
+#minesweeper .header p.gameOver {
+    color:#b80000;
+}
+#minesweeper .header p.gameWon {
+    color:#2b81af;
+}
+#minesweeper .header button {
+    text-align:center; width:160px;
+}
+#minesweeper .footer {
+    padding:8px 15px 8px 15px;
+    background:#eee;
+    border:1px solid #ccc;
+    overflow:hidden;
+    text-align:left;
+    font-size:0.7em;
+}
+#minesweeper .footer input {
+    position:relative;
+    top:2px;
+}
+#minesweeper .footer .left {
+    float:left;
+}
+#minesweeper .footer .right {
+    float:right;
+}
+#minesweeper .footer button {
+    width:40px;
+    height:30px;
+}
+

@@ -11,6 +11,7 @@ const userSchema = new Schema({
     language: {type: String},
     password: {type: String, required: true},
     date: {type: String, unique: true, default: Date.now},
+    gameId: {type: String, default: null}
 });
 
 const User = mongoose.model("User", userSchema);

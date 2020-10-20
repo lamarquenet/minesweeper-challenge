@@ -34,7 +34,7 @@ const setPassportStrategies = (passport) =>{
     const facebookOptions ={
         clientID: config.facebookApi.FACEBOOK_APP_ID ,
         clientSecret: config.facebookApi.FACEBOOK_APP_SECRET,
-        callbackURL: config.server.url+':'+config.server.port+'/users/loginFacebook/callback',
+        callbackURL: '/users/loginFacebook/callback',
         profileFields: ['emails', 'name']
     }
 
@@ -87,7 +87,6 @@ const setPassportStrategies = (passport) =>{
             .catch(err => done(err))
     }));
 
-    //used on request, brings the cookie info of the user from redis
     passport.serializeUser((user, done) => {
         done(null, user);
     });
