@@ -87,8 +87,8 @@ docReady(function() {
     timerInterval = setInterval( () =>{
         if(game !== ""){
             const timeToCompare = parseInt(gameFinished) == 0 ? Date.now() : parseInt(gameFinished);
-            const serverOffSet = (parseInt(serverTimeZone) - clientDate.getTimezoneOffset())*60000;
-            const seconds = Math.floor((timeToCompare - serverOffSet - parseInt(serverTime)) /1000);
+            //const serverOffSet = (parseInt(serverTimeZone) - clientDate.getTimezoneOffset())*60000;
+            const seconds = Math.floor((timeToCompare - parseInt(serverTime)) /1000);
             const minutes = Math.floor((seconds /60));
             const hours =  Math.floor(minutes / 60)
             timer.innerHTML = (hours +":"+minutes%60+":"+(seconds %60));
