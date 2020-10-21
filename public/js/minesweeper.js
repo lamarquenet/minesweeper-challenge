@@ -83,14 +83,17 @@ docReady(function() {
     }, false);
 
     const timer =  document.getElementById("minesweeperTime");
+    const clientDate = new Date();
     timerInterval = setInterval( () =>{
-        const currentClientDate = new Date;
-        const timeToCompare = timer.dataset.gamefinished == 0 ? Date.now() :timer.dataset.gamefinished;
-        const localOffSet = utcServer - currentClientDate.getTimezoneOffset() * 60000;
-        const seconds = Math.floor((timeToCompare + localOffSet - timer.dataset.time) /1000);
-        const minutes = Math.floor((seconds /60));
-        const hours =  Math.floor(minutes / 60)
-        timer.innerHTML = (hours +":"+minutes%60+":"+(seconds %60));
+        if(game !== ""){
+            const timeToCompare = parseInt(gameFinished) == 0 ? Date.now() : parseInt(gameFinished);
+            const serverOffSet = (parseInt(serverTimeZone) - clientDate.getTimezoneOffset())*60000;
+            const seconds = Math.floor((timeToCompare - serverOffSet - parseInt(serverTime)) /1000);
+            const minutes = Math.floor((seconds /60));
+            const hours =  Math.floor(minutes / 60)
+            timer.innerHTML = (hours +":"+minutes%60+":"+(seconds %60));
+        }
+        else{ clearInterval(timerInterval) }
     }, 1000)
 
 

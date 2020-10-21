@@ -3,25 +3,25 @@
     const margin = 2;
     const padding = 40;
     const cellWidth = 40;
-    const dynamicBoardWidth = game.columns * cellWidth + (margin + padding) * 2;
+    const dynamicBoardWidth = (game? game.columns * cellWidth : 360) + (margin + padding) * 2;
     //calculate time passed since the game was started
     let currentDate = new Date();
-    let gameTime = Date.now();
-    let gameFinished = 0;
-    if(game && game.time){
-        gameTime = game.time.getTime();
-        gameFinished = game.timeEnded ? game.timeEnded.getTime() : 0;
-    }
+    let timeZone = currentDate.getTimezoneOffset();
 %>
 <script>
-    const utcServer = '<%- game.time.getTimezoneOffset() * 60000 %>';
+    const game = '<%- game %>';
+    <% if(game){ %>
+        const serverTimeZone = '<%- timeZone %>';
+        const serverTime = '<%- game.time.getTime() %>';
+        const gameFinished = '<%- game.timeEnded ? game.timeEnded.getTime() : 0 %>';
+    <%}%>
 </script>
 <div id="minesweeper" style="width: <%= dynamicBoardWidth.toString() %>px;">
     <div class="header">
 
         <div class="time">
             <img src="/img/icon_clock.png" alt="" width="40" height="40">
-            <span id="minesweeperTime" data-time=<%=gameTime%> data-gameFinished=<%=gameFinished%> > 0 </span>
+            <span id="minesweeperTime"  > 0 </span>
         </div>
         <div class="secured">
             <img src="/img/icon_flag.png" alt="" width="40" height="40">

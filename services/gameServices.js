@@ -99,7 +99,7 @@ const deleteGame = (gameId) =>{
 
 const updateUserWithGameId = (user) =>{
     return new Promise(async (resolve, reject) => {
-        userModel.updateOne(user)
+        userModel.findOneAndUpdate({_id: user._id}, {gameId: user.gameId})
             .then(res => resolve(res))
             .catch(e => reject(e))
     })

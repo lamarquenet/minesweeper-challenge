@@ -8,7 +8,7 @@ app.use(bodyParses.json());
 app.use(express.static('public'));
 
 const corsMiddleware = require('./middlewares/cors');
-app.options('*', corsMiddleware);
+//app.options('*', corsMiddleware);
 app.use(corsMiddleware);
 
 //no console logs in production as they are not needed and they create overhead to the server, use logger instead
