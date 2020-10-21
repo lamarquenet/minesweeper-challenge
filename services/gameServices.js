@@ -35,10 +35,10 @@ const createGame = (height, width, mines) =>{
         map.minePositions = minesPositions;
         const saved = await map.save();
         if(saved.errors){
-            reject(saved.errors)
+            reject(saved.errors);
         }
         else{
-            resolve(saved._doc._id.toString());
+            resolve(saved);
         }
     })
 }

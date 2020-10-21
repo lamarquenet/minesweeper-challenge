@@ -17,16 +17,18 @@ const newGame = async(req, res) => {
         await gameServices.deleteGame(req.user.gameId);
     }
     gameServices.createGame(height, width, mines)
-        .then(async(gameId) => {
-            req.user.gameId = gameId;
+        .then(async(game) => {
+            req.user.gameId = game._doc._id.toString();
             gameServices.updateUserWithGameId(req.user)
-                .then(result => res.json({msg: "game created, reload page"}))
+                .then(result => res.json({
+                    serverDate: game._doc.time.getTime()
+                }))
                 .catch(async (err) => {
                     //if we reach this point something failed while trying to add this game id to the user
                     //delete the game so we don't have orphan games populating the db.
                     await gameServices.deleteGame(req.user.gameId);
                     req.user.gameId =null;
-                    res.status(500).json({error: "Error saving your game id"})
+                    res.status(500).json({error: err})
                 })
 
         })

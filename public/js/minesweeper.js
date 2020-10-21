@@ -1,12 +1,13 @@
 let timerInterval = null;
 
-const createNewGame = () =>{
+const createNewGame = async() =>{
     const input1 = document.getElementById("minesweeperLevel1").checked;
     const input2 = document.getElementById("minesweeperLevel2").checked;
     const body = input1? {height: 9, width:9, mines:11} : {height: 15, width:15, mines:40};
-    fetch( '/game/newGame',{method:'POST' ,headers: { "Content-Type": "application/json" }, body:JSON.stringify(body)})
-        .then(res => location.reload())
-        .catch(err => console.log(err))
+    const response = await fetch( '/game/newGame',{method:'POST' ,headers: { "Content-Type": "application/json" }, body:JSON.stringify(body)})
+    const data = await response.json();
+    localStorage.setItem("LocalClockOffset", (Date.now() - parseInt(data.serverDate)).toString());
+    location.reload()
 }
 
 const sendOrder = async(posX, posY, action) =>{
@@ -86,9 +87,9 @@ docReady(function() {
     const clientDate = new Date();
     timerInterval = setInterval( () =>{
         if(game !== ""){
+            const timeOffset = localStorage.getItem("LocalClockOffset");
             const timeToCompare = parseInt(gameFinished) == 0 ? Date.now() : parseInt(gameFinished);
-            //const serverOffSet = (parseInt(serverTimeZone) - clientDate.getTimezoneOffset())*60000;
-            const seconds = Math.floor((timeToCompare - parseInt(serverTime)) /1000);
+            const seconds = Math.floor((timeToCompare - parseInt(timeOffset) - parseInt(serverTime)) /1000);
             const minutes = Math.floor((seconds /60));
             const hours =  Math.floor(minutes / 60)
             timer.innerHTML = (hours +":"+minutes%60+":"+(seconds %60));
