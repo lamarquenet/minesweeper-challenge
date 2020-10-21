@@ -105,6 +105,14 @@ const updateUserWithGameId = (user) =>{
     })
 }
 
+const setFinishTime = (gameId) =>{
+    return new Promise(async (resolve, reject) => {
+        MapModel.findOneAndUpdate({_id:gameId},{timeEnded: Date.now()})
+            .then(res => resolve(res))
+            .catch(e => reject(e))
+    })
+}
+
 const updateSquare = (posX, posY, action, gameId) =>{
     return new Promise(async (resolve, reject) => {
         const map = await MapModel.findById(gameId).catch(e => reject(e));
@@ -162,11 +170,13 @@ const findAreaInBoard = (position, map) =>{
     return map._doc.board.filter(cell => (cell._doc.posY === position.posY && cell._doc.posX === position.posX))[0]
 }
 
-const openCell = (cell, map , cellsToUpdate) =>{
+const openCell = async(cell, map , cellsToUpdate) =>{
     if(!cell.isRevealed){
         cell.isRevealed = true;
+        map.unrevealedCells--;
         if(cell.isBomb){
             map.gameOver = true;
+            await setFinishTime(map._id);
             //if we step into a mine, show all other mines
             map.minePositions.forEach(position => {
                 const mineCell = findAreaInBoard(position,map);
@@ -175,6 +185,10 @@ const openCell = (cell, map , cellsToUpdate) =>{
                 mineCell.isQuestioned = false;
                 cellsToUpdate.push(mineCell);
             })
+        }
+        else if(map.mines === map.unrevealedCells){
+            //if i won i need to stop the clock
+            await setFinishTime(map._id);
         }
         else{
             if(cell.isFlagged){
@@ -186,7 +200,6 @@ const openCell = (cell, map , cellsToUpdate) =>{
                 openAdjacentNonMineCells(cell , map, cellsToUpdate);
             }
         }
-        map.unrevealedCells--;
         cellsToUpdate.push(cell);
     }
 }
@@ -233,5 +246,6 @@ module.exports = {
     getGame,
     updateSquare,
     deleteGame,
-    updateUserWithGameId
+    updateUserWithGameId,
+    setFinishTime
 };

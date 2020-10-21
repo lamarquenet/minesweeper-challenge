@@ -1,3 +1,5 @@
+let timerInterval = null;
+
 const createNewGame = () =>{
     const input1 = document.getElementById("minesweeperLevel1").checked;
     const input2 = document.getElementById("minesweeperLevel2").checked;
@@ -13,9 +15,11 @@ const sendOrder = async(posX, posY, action) =>{
     const data = await response.json();
     if(!data.error){
         if(data.gameOver){
+            clearInterval(timerInterval);
             alert(data.gameOver);
         }
         else if(data.victory){
+            clearInterval(timerInterval);
             alert(data.victory);
         }
         else{
@@ -34,6 +38,9 @@ const sendOrder = async(posX, posY, action) =>{
                 domCell.dataset.isflagged = cell.isFlagged;
                 domCell.dataset.isquestioned = cell.isQuestioned;
                 domCell.dataset.isrevelaed = cell.isRevealed;
+                if(cell.isBomb){
+                    clearInterval(timerInterval);
+                }
             })
         }
     }
@@ -74,6 +81,16 @@ docReady(function() {
 
         sendOrder(event.target.dataset.posx, event.target.dataset.posy, action);
     }, false);
+
+    const timer =  document.getElementById("minesweeperTime");
+    timerInterval = setInterval( () =>{
+        const timeToCompare = timer.dataset.gamefinished == 0 ? Date.now() :timer.dataset.gamefinished;
+        const seconds = Math.floor((timeToCompare - timer.dataset.time) /1000);
+        const minutes = Math.floor((seconds /60));
+        const hours =  Math.floor(minutes / 60)
+        timer.innerHTML = (hours +":"+minutes%60+":"+(seconds %60));
+    }, 1000)
+
 
     document.getElementsByClassName("main")[0].addEventListener('click', function (event) {
         // If the clicked element doesn't have the right selector, bail

@@ -23,7 +23,9 @@ const mapSchema = new Schema({
     mines: {type: Number, required: true},
     flags: {type: Number, required: true},
     minePositions: [minePositions],
-    board: [areaSchema]
+    board: [areaSchema],
+    time: {type: Date, default:Date.now},
+    timeEnded: {type: Date}
 });
 const AreaModel = mongoose.model("Area", areaSchema);
 const MapModel = mongoose.model("Map", mapSchema);
