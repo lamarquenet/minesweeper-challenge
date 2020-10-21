@@ -96,7 +96,7 @@ const register = (req, res) =>{
                         user.locallyRegistered = true;
                         user.password = hash;
                         console.log("A facebook user updated his password: "+user.name);
-                        userModel.save()
+                        user.save()
                                 .then(user => {
                                     req.flash('success_msg', 'You are now register and can log in');
                                     res.redirect('/users/login');
