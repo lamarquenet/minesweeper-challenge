@@ -21,7 +21,14 @@ table td {vertical-align:middle; text-align:center;}
     overflow:hidden;
 }
 #minesweeper * {
+    -moz-user-select:none;
+    -khtml-user-select: none;
 }
+
+.navbar-collapse.collapse.in {
+    display: block!important;
+}
+
 #minesweeper .main {
     margin:0 auto;
     overflow:hidden;

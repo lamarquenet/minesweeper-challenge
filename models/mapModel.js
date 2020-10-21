@@ -17,6 +17,7 @@ const minePositions = new Schema({
 
 const mapSchema = new Schema({
     gameOver: {type: Boolean, default:false},
+    unrevealedCells: {type: Number, required:true},
     rows: {type: Number, required: true},
     columns: {type: Number, required: true},
     mines: {type: Number, required: true},

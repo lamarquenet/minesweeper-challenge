@@ -1,4 +1,10 @@
-<div id="minesweeper">
+<%
+const margin = 2;
+const padding = 40;
+const cellWidth = 40;
+const dynamicBoardWidth = game.columns * cellWidth + (margin + padding) * 2;
+%>
+<div id="minesweeper" style="width: <%= dynamicBoardWidth.toString() %>px;">
     <div class="header">
 
         <div class="time">
@@ -19,12 +25,13 @@
         <% if(typeof game !='undefined' && game !== null){ %>
             <ul>
                 <% game.board.reverse().forEach(function(cell){
-                    let imageType = cell.isRevealed ? "/img/bg_down.png" : "/img/bg_closed.png";
+                    let imageType = cell.isRevealed ? "/img/"+cell.nearMines+".png" : "/img/bg_closed.png";
                     imageType = cell.isFlagged ? "/img/red_flagged.png" : imageType;
+                    imageType = cell.isQuestioned ? "/img/questioned.png" : imageType;
                     imageType = cell.isBomb ? "/img/icon_mine.png" : imageType;
                 %>
                     <li>
-                        <img src=<%= imageType %> class="cell" id="<%= cell.posX %>-<%=cell.posY %>" data-posX=<%= cell.posX %> data-posY=<%= cell.posY %> data-isFlagged=<%= cell.isFlagged %> data-isQuestion=<%= cell.isQuestioned %> class="0" alt="" width="40" height="40" onselect="this.blur();">
+                        <img src=<%= imageType %> class="cell" id="<%= cell.posX %>-<%=cell.posY %>" data-isrevealed=<%= cell.isRevealed %> data-posX=<%= cell.posX %> data-posY=<%= cell.posY %> data-isFlagged=<%= cell.isFlagged %> data-isQuestioned=<%= cell.isQuestioned %> class="0" alt="" width="40" height="40" onselect="this.blur();">
                     </li>
                 <% }); %>
             </ul>

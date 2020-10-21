@@ -20,6 +20,7 @@ const createGame = (height, width, mines) =>{
                 map.board.push(area);
             }
         }
+        map.unrevealedCells = width * height;
         map.columns = width;
         map.rows = height;
         minesPositions.forEach(mine => {
@@ -108,7 +109,10 @@ const updateSquare = (posX, posY, action, gameId) =>{
     return new Promise(async (resolve, reject) => {
         const map = await MapModel.findById(gameId).catch(e => reject(e));
         if(map.gameOver){
-            resolve({gameOver: true})
+            resolve({gameOver: "Your Game Is Over, you need to create a new one."})
+        }
+        else if(map.mines === map.unrevealedCells ){
+            resolve({victory: "You won the game, please create a new game"})
         }
         else{
             const square = map._doc.board.filter(square => (square._doc.posY === posY && square._doc.posX === posX))[0]
@@ -117,19 +121,7 @@ const updateSquare = (posX, posY, action, gameId) =>{
                 cellsToUpdate.push(square);
             }
             else if(action === "reveal"){
-                square.isRevealed = true;
-                if(square.isBomb){
-                    map.gameOver = true;
-                }
-                else{
-                    if(square.isFlagged){
-                        square.isFlagged = false;
-                        square.isQuestioned = false;
-                        map.flags--;
-                    }
-                    //add logic to search the area and reveal all adjacent free spaces
-                }
-                cellsToUpdate.push(square);
+                openCell(square, map, cellsToUpdate)
             }
             else if(action === "red_flag"){
                 square.isFlagged = true;
@@ -137,10 +129,19 @@ const updateSquare = (posX, posY, action, gameId) =>{
                 map.flags++;
                 cellsToUpdate.push(square);
             }
-            //todo add logic to mark the cell as questioned
+            else if(action === "question_mark"){
+                square.isFlagged = false;
+                square.isQuestioned = true;
+                map.flags--;
+                cellsToUpdate.push(square);
+            }
+            else if(action === "clean"){
+                square.isFlagged = false;
+                square.isQuestioned = false;
+                cellsToUpdate.push(square);
+            }
 
 
-            //todo logic to avoid user from keep playing once the game is over
 
             map.save()
                 .then(res =>{
@@ -155,6 +156,76 @@ const updateSquare = (posX, posY, action, gameId) =>{
                 .catch(err => reject(err))
         }
     })
+}
+
+const findAreaInBoard = (position, map) =>{
+    return map._doc.board.filter(cell => (cell._doc.posY === position.posY && cell._doc.posX === position.posX))[0]
+}
+
+const openCell = (cell, map , cellsToUpdate) =>{
+    if(!cell.isRevealed){
+        cell.isRevealed = true;
+        if(cell.isBomb){
+            map.gameOver = true;
+            //if we step into a mine, show all other mines
+            map.minePositions.forEach(position => {
+                const mineCell = findAreaInBoard(position,map);
+                mineCell.isRevealed = true;
+                mineCell.isFlagged = false;
+                mineCell.isQuestioned = false;
+                cellsToUpdate.push(mineCell);
+            })
+        }
+        else{
+            if(cell.isFlagged){
+                cell.isFlagged = false;
+                cell.isQuestioned = false;
+                map.flags--;
+            }
+            if(cell.nearMines === 0){
+                openAdjacentNonMineCells(cell , map, cellsToUpdate);
+            }
+        }
+        map.unrevealedCells--;
+        cellsToUpdate.push(cell);
+    }
+}
+const getAdjacentCells = (cell , map) => {
+    let adjacent = [],
+        isTopRow    = cell.posY === 1 ? true : false,
+        isBottomRow = cell.posY === (map.rows) ? true : false,
+        isLeftEdge  = cell.posX === 1 ? true : false,
+        isRightEdge = cell.posX === (map.columns) ? true : false;
+
+    // Returns adjacent cells, checks if they are not out of bounds.
+    if (!isTopRow){    adjacent.push({posX:cell.posX, posY:cell.posY - 1}) };
+    if (!isLeftEdge){  adjacent.push({posX:cell.posX - 1, posY:cell.posY}) };
+    if (!isRightEdge){ adjacent.push({posX:cell.posX + 1, posY:cell.posY}) };
+    if (!isBottomRow){ adjacent.push({posX:cell.posX, posY:cell.posY + 1}) };
+
+    if (!isTopRow && !isLeftEdge){      adjacent.push({posX:cell.posX - 1, posY:cell.posY - 1}) }
+    if (!isTopRow && !isRightEdge){     adjacent.push({posX:cell.posX + 1, posY:cell.posY - 1}) }
+    if (!isBottomRow && !isLeftEdge){   adjacent.push({posX:cell.posX - 1, posY:cell.posY + 1}) }
+    if (!isBottomRow && !isRightEdge){  adjacent.push({posX:cell.posX + 1, posY:cell.posY + 1}) }
+
+    adjacent = adjacent.map(position => findAreaInBoard(position, map))
+    return adjacent;
+}
+
+// open adjacent cells that aren't yet shown and don't have a mine
+const openAdjacentNonMineCells = (cell, map, cellsToUpdate )=> {
+    let adjacentNonMineCells;
+
+
+    adjacentNonMineCells = getAdjacentCells(cell, map).filter((cell)=> {
+        return (!cell.isBomb && !cell.isRevealed);
+    });
+
+    if (adjacentNonMineCells.length > 0) {
+        adjacentNonMineCells.forEach((adjacentCell) =>{
+            openCell(adjacentCell , map , cellsToUpdate);
+        });
+    }
 }
 
 module.exports = {

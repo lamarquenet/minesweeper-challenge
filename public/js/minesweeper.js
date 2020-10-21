@@ -13,17 +13,27 @@ const sendOrder = async(posX, posY, action) =>{
     const data = await response.json();
     if(!data.error){
         if(data.gameOver){
-            alert("Your Game Is Over, you need to create a new one.");
+            alert(data.gameOver);
+        }
+        else if(data.victory){
+            alert(data.victory);
         }
         else{
             data.forEach(cell =>{
-                let imageType = cell.isRevealed ? "/img/bg_down.png" : "/img/bg_closed.png";
+                let imageType = cell.isRevealed ? "/img/"+cell.nearMines+".png" : "/img/bg_closed.png";
                 imageType = cell.isFlagged ? "/img/red_flagged.png" : imageType;
+                imageType = cell.isQuestioned ? "/img/questioned.png" : imageType;
                 imageType = cell.isBomb ? "/img/icon_mine.png" : imageType;
-                document.getElementById(cell.posX+"-"+cell.posY).src = imageType;
-                if(cell.isBomb){
-                    alert("Kaboom, you are dead.");
+                let domCell = document.getElementById(cell.posX+"-"+cell.posY);
+                domCell.src = imageType;
+                if(domCell.dataset.isflagged !== cell.isFlagged.toString()){
+                    let domFlagsCounter = document.getElementById("minesweeperFlags");
+                    const addOrSubstract = cell.isFlagged? 1: -1;
+                    domFlagsCounter.innerHTML = (parseInt(domFlagsCounter.innerHTML) + addOrSubstract).toString();
                 }
+                domCell.dataset.isflagged = cell.isFlagged;
+                domCell.dataset.isquestioned = cell.isQuestioned;
+                domCell.dataset.isrevelaed = cell.isRevealed;
             })
         }
     }
@@ -67,7 +77,7 @@ docReady(function() {
 
     document.getElementsByClassName("main")[0].addEventListener('click', function (event) {
         // If the clicked element doesn't have the right selector, bail
-        if (!event.target.matches('.cell')) return;
+        if (!event.target.matches('.cell') || event.target.dataset.isrevelaed === "true") return;
 
         sendOrder(event.target.dataset.posx, event.target.dataset.posy, "reveal");
 
