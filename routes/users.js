@@ -18,7 +18,7 @@ router.get('/loginFacebook/callback', userServices.loginFacebookCb)
 router.get('/logout', userServices.logout);
 
 //post request
-//authenticate user using passport local strategy and Flash session message, we need to use next as param
+//authenticate user using passport local strategy
 router.post('/login', userServices.loginLocal);
 
 // Register Handle

@@ -84,8 +84,10 @@ docReady(function() {
 
     const timer =  document.getElementById("minesweeperTime");
     timerInterval = setInterval( () =>{
+        const currentClientDate = new Date;
         const timeToCompare = timer.dataset.gamefinished == 0 ? Date.now() :timer.dataset.gamefinished;
-        const seconds = Math.floor((timeToCompare - timer.dataset.time) /1000);
+        const localOffSet = utcServer - currentClientDate.getTimezoneOffset() * 60000;
+        const seconds = Math.floor((timeToCompare + localOffSet - timer.dataset.time) /1000);
         const minutes = Math.floor((seconds /60));
         const hours =  Math.floor(minutes / 60)
         timer.innerHTML = (hours +":"+minutes%60+":"+(seconds %60));

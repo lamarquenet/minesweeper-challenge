@@ -13,6 +13,9 @@
         gameFinished = game.timeEnded ? game.timeEnded.getTime() : 0;
     }
 %>
+<script>
+    const utcServer = '<%- game.time.getTimezoneOffset() * 60000 %>';
+</script>
 <div id="minesweeper" style="width: <%= dynamicBoardWidth.toString() %>px;">
     <div class="header">
 
