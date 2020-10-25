@@ -10,47 +10,6 @@ const createNewGame = async() =>{
     location.reload()
 }
 
-const sendOrder = async(posX, posY, action) =>{
-    const body = JSON.stringify({posY: parseInt(posY), posX:parseInt(posX), action:action});
-    const response = await fetch( '/game/updateCell',{method:'PUT' ,headers: { "Content-Type": "application/json" }, body:body})
-    const data = await response.json();
-    if(!data.error){
-        if(data.gameOver){
-            clearInterval(timerInterval);
-            alert(data.gameOver);
-        }
-        else if(data.victory){
-            clearInterval(timerInterval);
-            alert(data.victory);
-        }
-        else{
-            data.forEach(cell =>{
-                let imageType = cell.isRevealed ? "/img/"+cell.nearMines+".png" : "/img/bg_closed.png";
-                imageType = cell.isFlagged ? "/img/red_flagged.png" : imageType;
-                imageType = cell.isQuestioned ? "/img/questioned.png" : imageType;
-                imageType = cell.isBomb ? "/img/icon_mine.png" : imageType;
-                let domCell = document.getElementById(cell.posX+"-"+cell.posY);
-                domCell.src = imageType;
-                if(domCell.dataset.isflagged !== cell.isFlagged.toString()){
-                    let domFlagsCounter = document.getElementById("minesweeperFlags");
-                    const addOrSubstract = cell.isFlagged? 1: -1;
-                    domFlagsCounter.innerHTML = (parseInt(domFlagsCounter.innerHTML) + addOrSubstract).toString();
-                }
-                domCell.dataset.isflagged = cell.isFlagged;
-                domCell.dataset.isquestioned = cell.isQuestioned;
-                domCell.dataset.isrevelaed = cell.isRevealed;
-                if(cell.isBomb){
-                    clearInterval(timerInterval);
-                }
-            })
-        }
-    }
-    else{
-        console.error(data);
-        alert("order failed to execute");
-    }
-}
-
 function docReady(fn) {
     // see if DOM is already available
     if (document.readyState === "complete" || document.readyState === "interactive") {
@@ -118,4 +77,51 @@ docReady(function() {
         sendOrder(event.target.dataset.posx, event.target.dataset.posy, "reveal");
 
     }, false);
+
+    const sendOrder = async(posX, posY, action) =>{
+        const body = JSON.stringify({posY: parseInt(posY), posX:parseInt(posX), action:action});
+        const response = await fetch( '/game/updateCell',{method:'PUT' ,headers: { "Content-Type": "application/json" }, body:body})
+        const data = await response.json();
+        if(!data.error){
+            if(data.gameOver){
+                clearInterval(timerInterval);
+                alert(data.gameOver);
+            }
+            else if(data.victory){
+                clearInterval(timerInterval);
+                alert(data.victory);
+            }
+            else{
+                data.forEach(cell =>{
+                    let imageType = cell.isRevealed ? "/img/"+cell.nearMines+".png" : "/img/bg_closed.png";
+                    imageType = cell.isFlagged ? "/img/red_flagged.png" : imageType;
+                    imageType = cell.isQuestioned ? "/img/questioned.png" : imageType;
+                    imageType = cell.isBomb ? "/img/icon_mine.png" : imageType;
+                    let domCell = document.getElementById(cell.posX+"-"+cell.posY);
+                    domCell.src = imageType;
+                    if(domCell.dataset.isflagged !== cell.isFlagged.toString()){
+                        let domFlagsCounter = document.getElementById("minesweeperFlags");
+                        const addOrSubstract = cell.isFlagged? 1: -1;
+                        domFlagsCounter.innerHTML = (parseInt(domFlagsCounter.innerHTML) + addOrSubstract).toString();
+                    }
+                    if(cell.isRevealed.toString() !== domCell.dataset.isrevealed){
+                        gameObj.unrevealedCells--;
+                    }
+                    domCell.dataset.isflagged = cell.isFlagged;
+                    domCell.dataset.isquestioned = cell.isQuestioned;
+                    domCell.dataset.isrevelaed = cell.isRevealed;
+                    if(cell.isBomb){
+                        clearInterval(timerInterval);
+                    }else if(gameObj.mines >= gameObj.unrevealedCells){
+                        clearInterval(timerInterval);
+                        alert("You won the game");
+                    }
+                })
+            }
+        }
+        else{
+            console.error(data);
+            alert("order failed to execute");
+        }
+    }
 });

@@ -175,6 +175,7 @@ const findAreaInBoard = (position, map) =>{
 const openCell = (cell, map , cellsToUpdate) =>{
     if(!cell.isRevealed){
         cell.isRevealed = true;
+        cell.isQuestioned = false;
         map.unrevealedCells--;
         if(cell.isBomb){
             map.gameOver = true;
@@ -188,19 +189,19 @@ const openCell = (cell, map , cellsToUpdate) =>{
                 cellsToUpdate.push(mineCell);
             })
         }
-        else if(map.mines === map.unrevealedCells){
-            //if i won i need to stop the clock
-            setFinishTime(map._id);
-        }
         else{
             if(cell.isFlagged){
                 cell.isFlagged = false;
-                cell.isQuestioned = false;
                 map.flags--;
             }
             if(cell.nearMines === 0){
                 openAdjacentNonMineCells(cell , map, cellsToUpdate);
             }
+        }
+
+        if(map.mines === map.unrevealedCells){
+            //if i won i need to stop the clock
+            setFinishTime(map._id);
         }
         //if it is a bomb it will be already pushed with all the other mines
         if(!cell.isBomb){
