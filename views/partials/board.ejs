@@ -46,7 +46,7 @@
 
         </div>
         <div class="main">
-            <% if(typeof game !=='undefined' && game !== null){ %>
+            <% if(typeof game !=='undefined' && game != null){ %>
                 <ul>
                     <% game.board.reverse().forEach(function(cell){
                         let imageType = cell.isRevealed ? "/img/"+cell.nearMines+".png" : "/img/bg_closed.png";
@@ -81,7 +81,7 @@
     </div>
     <div id="scoreboard">
         <h3>Scoreboard</h3>
-        <% if(typeof scores !=='undefined'){ %>
+        <% if(typeof scores !=='undefined' && typeof game !=='undefined' && game != null){ %>
             <% if(typeof game !=='undefined' && (game.columns * game.rows) === 81){ %>
                 <h5>Difficulty: Normal</h5>
                 <% scores.bestTimeNormal.forEach(function(score){%>
