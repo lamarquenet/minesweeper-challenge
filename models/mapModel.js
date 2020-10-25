@@ -16,6 +16,8 @@ const minePositions = new Schema({
 });
 
 const mapSchema = new Schema({
+    creatorEmail: {type: String, required:true},
+    creatorName: {type: String, required: true},
     gameOver: {type: Boolean, default:false},
     unrevealedCells: {type: Number, required:true},
     rows: {type: Number, required: true},

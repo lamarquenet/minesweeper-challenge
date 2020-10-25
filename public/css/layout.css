@@ -16,10 +16,11 @@ table td {vertical-align:middle; text-align:center;}
     width:444px;
     margin:0 auto;
     border:1px solid #999;
-    padding:30px 40px 40px 40px;
-    box-shadow:8px 8px #999;
-    overflow:hidden;
+    padding:0px;
+    float: left;
+    display: inline-table;
 }
+
 #minesweeper * {
     -moz-user-select:none;
     -khtml-user-select: none;
@@ -27,6 +28,16 @@ table td {vertical-align:middle; text-align:center;}
 
 .navbar-collapse.collapse.in {
     display: block!important;
+}
+
+.gameContainer {
+    display: flex;
+    overflow: scroll;
+}
+
+#scoreboard {
+    float: right;
+    margin: 20px;
 }
 
 #minesweeper .main {

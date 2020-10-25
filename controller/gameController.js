@@ -2,12 +2,14 @@ const gameServices = require("../services/gameServices");
 
 const dashboard = async(req, res) =>{
     let game = undefined;
+    const scores = await gameServices.getScores();
     if(req.user.gameId){
         game = await gameServices.getGame(req.user.gameId);
     }
     res.render('dashboard', {
         name: req.user.name,
-        game: game
+        game: game,
+        scores: scores
     })
 }
 
@@ -16,7 +18,7 @@ const newGame = async(req, res) => {
     if(req.user.gameId){
         await gameServices.deleteGame(req.user.gameId);
     }
-    gameServices.createGame(height, width, mines)
+    gameServices.createGame(height, width, mines, req.user.name, req.user.email)
         .then(async(game) => {
             req.user.gameId = game._doc._id.toString();
             gameServices.updateUserWithGameId(req.user)

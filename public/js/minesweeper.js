@@ -1,9 +1,11 @@
 let timerInterval = null;
 
 const createNewGame = async() =>{
-    const input1 = document.getElementById("minesweeperLevel1").checked;
-    const input2 = document.getElementById("minesweeperLevel2").checked;
-    const body = input1? {height: 9, width:9, mines:11} : {height: 15, width:15, mines:40};
+    const input1 = document.getElementById("minesweeperLevel1");
+    const input2 = document.getElementById("minesweeperLevel2");
+    const input3 = document.getElementById("minesweeperLevel3");
+    const selected = input1.checked? input1 : input2.checked? input2 : input3;
+    const body = {height: +selected.dataset.size, width:+selected.dataset.size, mines:+selected.dataset.mines};
     const response = await fetch( '/game/newGame',{method:'POST' ,headers: { "Content-Type": "application/json" }, body:JSON.stringify(body)})
     const data = await response.json();
     await localStorage.setItem("LocalClockOffset", (Date.now() - parseInt(data.serverDate)).toString());
@@ -22,18 +24,9 @@ function docReady(fn) {
 
 docReady(function() {
     const gameObj = JSON.parse(game)
-    let padding = 40;
-    if(window.screen.availWidth < 411){
-        padding = 0;
+    if(gameObj.mines >= gameObj.unrevealedCells){
+        alert("You won the game");
     }
-    const margin = 2;
-    const cellWidth = 40;
-    const dynamicBoardWidth = (gameObj? gameObj.columns * cellWidth : 360) + (margin + padding) * 2;
-    const gameWindow = document.getElementById("minesweeper");
-    gameWindow.style.width = dynamicBoardWidth.toString()+"px";
-    gameWindow.style.padding = padding.toString()+"px";
-
-
     // DOM is loaded and ready for manipulation here
     document.getElementsByClassName("main")[0].addEventListener('contextmenu', function(event) {
         // If the clicked element doesn't have the right selector, bail
@@ -56,11 +49,10 @@ docReady(function() {
     }, false);
 
     const timer =  document.getElementById("minesweeperTime");
-    const clientDate = new Date();
     timerInterval = setInterval( () =>{
         if(game !== ""){
             const timeOffset = localStorage.getItem("LocalClockOffset");
-            const timeToCompare = parseInt(gameFinished) == 0 ? Date.now() : parseInt(gameFinished);
+            const timeToCompare = parseInt(gameFinished) == 0 ? Date.now() : parseInt(gameFinished) -parseInt(timeOffset);
             const seconds = Math.floor((timeToCompare - parseInt(timeOffset) - parseInt(serverTime)) /1000);
             const minutes = Math.floor((seconds /60));
             const hours =  Math.floor(minutes / 60)
@@ -113,8 +105,7 @@ docReady(function() {
                     if(cell.isBomb){
                         clearInterval(timerInterval);
                     }else if(gameObj.mines >= gameObj.unrevealedCells){
-                        clearInterval(timerInterval);
-                        alert("You won the game");
+                        location.reload()
                     }
                 })
             }

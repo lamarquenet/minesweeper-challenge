@@ -1,66 +1,108 @@
 <%
     //calculate game window size
-    let padding = 40;
     const margin = 2;
     const cellWidth = 40;
-    const dynamicBoardWidth = (game? game.columns * cellWidth : 360) + (margin + padding) * 2;
+    const dynamicBoardWidth = (game? game.columns * cellWidth : 360) + (margin) * 2;
     //calculate time passed since the game was started
     let currentDate = new Date();
     let timeZone = currentDate.getTimezoneOffset();
+
+    const formatTime = (timeResult)=>{
+        const seconds = Math.floor(timeResult /1000);
+        const minutes = Math.floor((seconds /60));
+        const hours =  Math.floor(minutes / 60)
+        return (hours +":"+minutes%60+":"+(seconds %60));
+    }
+
+    const truncate =(str)=>{
+        return (str.length > 18) ? str.substr(0, 15-1) + '...' : str;
+    };
 %>
 <script>
     const game = '<%- JSON.stringify(game) %>';
+    const scores = '<%- JSON.stringify(scores) %>';
     <% if(game){ %>
         const serverTimeZone = '<%- timeZone %>';
         const serverTime = '<%- game.time.getTime() %>';
         const gameFinished = '<%- game.timeEnded ? game.timeEnded.getTime() : 0 %>';
     <%}%>
 </script>
-<div id="minesweeper" style="width: <%= dynamicBoardWidth.toString() %>px; padding: <%= padding.toString() %> " >
-    <div class="header">
+<container class="gameContainer" float>
+    <div id="minesweeper" style="width: <%= dynamicBoardWidth.toString() %>px; %> " >
+        <div class="header">
 
-        <div class="time">
-            <img src="/img/icon_clock.png" alt="" width="40" height="40">
-            <span id="minesweeperTime"  > 0 </span>
-        </div>
-        <div class="secured">
-            <img src="/img/icon_flag.png" alt="" width="40" height="40">
-            <span id="minesweeperFlags"><%= game? game.flags: 0 %></span>
-        </div>
-        <div class="mines">
-            <img src="/img/icon_mine.png" alt="" width="40" height="40">
-            <span id="minesweeperMines"><%= game?game.mines: 0 %></span>
-        </div>
+            <div class="time">
+                <img src="/img/icon_clock.png" alt="" width="40" height="40">
+                <span id="minesweeperTime"  > 0 </span>
+            </div>
+            <div class="secured">
+                <img src="/img/icon_flag.png" alt="" width="40" height="40">
+                <span id="minesweeperFlags"><%= game? game.flags: 0 %></span>
+            </div>
+            <div class="mines">
+                <img src="/img/icon_mine.png" alt="" width="40" height="40">
+                <span id="minesweeperMines"><%= game?game.mines: 0 %></span>
+            </div>
 
-    </div>
-    <div class="main">
-        <% if(typeof game !='undefined' && game !== null){ %>
-            <ul>
-                <% game.board.reverse().forEach(function(cell){
-                    let imageType = cell.isRevealed ? "/img/"+cell.nearMines+".png" : "/img/bg_closed.png";
-                    imageType = cell.isFlagged ? "/img/red_flagged.png" : imageType;
-                    imageType = cell.isQuestioned ? "/img/questioned.png" : imageType;
-                    imageType = cell.isBomb ? "/img/icon_mine.png" : imageType;
-                %>
+        </div>
+        <div class="main">
+            <% if(typeof game !=='undefined' && game !== null){ %>
+                <ul>
+                    <% game.board.reverse().forEach(function(cell){
+                        let imageType = cell.isRevealed ? "/img/"+cell.nearMines+".png" : "/img/bg_closed.png";
+                        imageType = cell.isFlagged ? "/img/red_flagged.png" : imageType;
+                        imageType = cell.isQuestioned ? "/img/questioned.png" : imageType;
+                        imageType = cell.isBomb ? "/img/icon_mine.png" : imageType;
+                    %>
                     <li>
                         <img src=<%= imageType %> class="cell" id="<%= cell.posX %>-<%=cell.posY %>" data-isrevealed=<%= cell.isRevealed %> data-posX=<%= cell.posX %> data-posY=<%= cell.posY %> data-isFlagged=<%= cell.isFlagged %> data-isQuestioned=<%= cell.isQuestioned %> class="0" alt="" width="40" height="40" onselect="this.blur();">
                     </li>
-                <% }); %>
-            </ul>
+                    <% }); %>
+                </ul>
+            <% } else{ %>
+                <p>You have not created any game.</p>
+            <% } %>
+        </div>
+        <div class="footer">
+            <div class="left">
+                <input type="radio" name="minesweeperLevel" data-size="9" data-mines="11" id="minesweeperLevel1" value="1" checked="checked">
+                <label for="minesweeperLevel1"><strong>Normal</strong> (cols: 9, rows: 9, mines: 11)</label>
+                <br>
+                <input type="radio" name="minesweeperLevel" data-size="15" data-mines="40" id="minesweeperLevel2" value="2">
+                <label for="minesweeperLevel2"><strong>Hard</strong> (cols: 15, rows: 15, mines: 40)</label>
+                <br>
+                <input type="radio" name="minesweeperLevel" data-size="25" data-mines="140" id="minesweeperLevel3" value="2">
+                <label for="minesweeperLevel2"><strong>Nightmare</strong> (cols: 25, rows: 25, mines: 150)</label>
+            </div>
+            <div class="right">
+                <button onclick="createNewGame()">OK</button>
+            </div>
+        </div>
+    </div>
+    <div id="scoreboard">
+        <h3>Scoreboard</h3>
+        <% if(typeof scores !=='undefined'){ %>
+            <% if(typeof game !=='undefined' && (game.columns * game.rows) === 81){ %>
+                <h5>Difficulty: Normal</h5>
+                <% scores.bestTimeNormal.forEach(function(score){%>
+                <p><%=formatTime(score.bestTime)%> <%=truncate(score.name)%></p>
+                <% }) %>
+            <%}%>
+            <% if(typeof game !=='undefined' && (game.columns * game.rows) === 225){ %>
+                <h5>Difficulty: Hard</h5>
+                <% scores.bestTimeHard.forEach(function(score){%>
+                <p><%=formatTime(score.bestTime)%> <%=truncate(score.name)%></p>
+                <% }) %>
+            <%}%>
+            <% if(typeof game !=='undefined' && (game.columns * game.rows) === 625){ %>
+                <h5>Difficulty: Nightmare</h5>
+                <% scores.bestTimeNightmare.forEach(function(score){%>
+                <p><%=formatTime(score.bestTime)%> <%=truncate(score.name)%></p>
+                <% }) %>
+            <%}%>
         <% } else{ %>
-            <p>You have not created any game.</p>
+            <p>No Scores where found.</p>
         <% } %>
     </div>
-    <div class="footer">
-        <div class="left">
-            <input type="radio" name="minesweeperLevel" id="minesweeperLevel1" value="1" checked="checked">
-            <label for="minesweeperLevel1"><strong>Normal</strong> (cols: 9, rows: 9, mines: 11)</label>
-            <br>
-            <input type="radio" name="minesweeperLevel" id="minesweeperLevel2" value="2">
-            <label for="minesweeperLevel2"><strong>Hard</strong> (cols: 15, rows: 15, mines: 40)</label>
-        </div>
-        <div class="right">
-            <button onclick="createNewGame()">OK</button>
-        </div>
-    </div>
-</div>
+</container>
+
