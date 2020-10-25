@@ -5,9 +5,11 @@ const createGame = (height, width, mines) =>{
     return new Promise(async (resolve, reject) => {
         let map = new MapModel({board: []});
         let minesPositions = [];
-        for(let i=mines; i >0; i--){
+        while(minesPositions.length <mines){
             const minePosition = getBombPosition(height , width);
-            minesPositions.push(minePosition);
+            if(minesPositions.filter(mine => mine.posX === minePosition.posX && mine.posY === minePosition.posY).length ===0){
+                minesPositions.push(minePosition);
+            }
         }
         for(let y = height; y > 0; y--){
             for(let x = width; x>0; x--){
@@ -170,13 +172,13 @@ const findAreaInBoard = (position, map) =>{
     return map._doc.board.filter(cell => (cell._doc.posY === position.posY && cell._doc.posX === position.posX))[0]
 }
 
-const openCell = async(cell, map , cellsToUpdate) =>{
+const openCell = (cell, map , cellsToUpdate) =>{
     if(!cell.isRevealed){
         cell.isRevealed = true;
         map.unrevealedCells--;
         if(cell.isBomb){
             map.gameOver = true;
-            await setFinishTime(map._id);
+            setFinishTime(map._id);
             //if we step into a mine, show all other mines
             map.minePositions.forEach(position => {
                 const mineCell = findAreaInBoard(position,map);
@@ -188,7 +190,7 @@ const openCell = async(cell, map , cellsToUpdate) =>{
         }
         else if(map.mines === map.unrevealedCells){
             //if i won i need to stop the clock
-            await setFinishTime(map._id);
+            setFinishTime(map._id);
         }
         else{
             if(cell.isFlagged){
@@ -200,7 +202,11 @@ const openCell = async(cell, map , cellsToUpdate) =>{
                 openAdjacentNonMineCells(cell , map, cellsToUpdate);
             }
         }
-        cellsToUpdate.push(cell);
+        //if it is a bomb it will be already pushed with all the other mines
+        if(!cell.isBomb){
+            cellsToUpdate.push(cell);
+        }
+
     }
 }
 const getAdjacentCells = (cell , map) => {

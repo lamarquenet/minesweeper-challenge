@@ -48,8 +48,12 @@ const getGame = async(req, res) => {
 const updateCell = (req, res)=> {
     const {posY, posX, action} = req.body;
     gameServices.updateSquare(posX, posY, action, req.user.gameId)
-        .then(result => res.json(result))
-        .catch(err => res.json(err))
+        .then(result =>{
+            res.json(result)
+        })
+        .catch(err => {
+            res.json(err)
+        })
 };
 
 

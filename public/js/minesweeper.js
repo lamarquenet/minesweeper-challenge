@@ -6,7 +6,7 @@ const createNewGame = async() =>{
     const body = input1? {height: 9, width:9, mines:11} : {height: 15, width:15, mines:40};
     const response = await fetch( '/game/newGame',{method:'POST' ,headers: { "Content-Type": "application/json" }, body:JSON.stringify(body)})
     const data = await response.json();
-    localStorage.setItem("LocalClockOffset", (Date.now() - parseInt(data.serverDate)).toString());
+    await localStorage.setItem("LocalClockOffset", (Date.now() - parseInt(data.serverDate)).toString());
     location.reload()
 }
 
@@ -62,6 +62,19 @@ function docReady(fn) {
 }
 
 docReady(function() {
+    const gameObj = JSON.parse(game)
+    let padding = 40;
+    if(window.screen.availWidth < 411){
+        padding = 0;
+    }
+    const margin = 2;
+    const cellWidth = 40;
+    const dynamicBoardWidth = (gameObj? gameObj.columns * cellWidth : 360) + (margin + padding) * 2;
+    const gameWindow = document.getElementById("minesweeper");
+    gameWindow.style.width = dynamicBoardWidth.toString()+"px";
+    gameWindow.style.padding = padding.toString()+"px";
+
+
     // DOM is loaded and ready for manipulation here
     document.getElementsByClassName("main")[0].addEventListener('contextmenu', function(event) {
         // If the clicked element doesn't have the right selector, bail
